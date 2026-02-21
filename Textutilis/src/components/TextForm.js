@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState,useRef} from 'react'
 
 
 export default function TextForm(props) {
@@ -13,10 +13,23 @@ const handleLoclick=()=>{
   setText(newText)
 }
 
+const handlespeedclick=()=>{
+   if(!starttime.current) return;
+const endtime= new Date().getTime();
+const totaltimeinminutes=(endtime-starttime.current)/1000/60;
+const characters= Text.length;
+const calculatedwpm= Math.round((characters/5)/totaltimeinminutes);
+SetWpm(calculatedwpm);
+}
 const handleonchange=(event)=>{
-     console.log("onchange")
+     if(!starttime.current){
+      starttime.current=new Date().getTime();
+      
+     }
      setText(event.target.value)
   }
+  const [WPM,SetWpm]=useState(null)
+  const starttime=useRef(null)
   
 
   const [Text, setText] = useState("")  // React hooks can be called only inside your component function 
@@ -33,7 +46,10 @@ const handleonchange=(event)=>{
   </div>
     <button className="btn btn-success my-3 mx-2" onClick={handleupclick} >Convert to Uppercase</button>
     <button className="btn btn-warning my-3 mx-2 " onClick={handleLoclick} >Convert to Lowercase</button>
-    
+    <button className="btn btn-primary my-3 mx-2 " onClick={handlespeedclick} >Calculate Speed</button>
+    {WPM !== null && (
+          <h4>Your Typing Speed: {WPM} WPM 🚀</h4>
+        )}
     </div>
     <div className="container my-2 ">
       <h1>TextSummary</h1>
